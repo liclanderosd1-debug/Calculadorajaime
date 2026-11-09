@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora de prestaciones y demanda laboral · LFT 2026</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--tx:#1d1d1b;--mut:#6b6a66;--bd:#dedcd5;--ac:#0f5c4a;--ac2:#e5f1ed;--wn:#8a5a00;--wnb:#fdf3dc;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171716;--card:#222220;--tx:#eeede8;--mut:#a3a29c;--bd:#3a3935;--ac:#5fc4a6;--ac2:#1d3a32;--wn:#e8b84d;--wnb:#35290f}}
+:root[data-theme="dark"]{--bg:#171716;--card:#222220;--tx:#eeede8;--mut:#a3a29c;--bd:#3a3935;--ac:#5fc4a6;--ac2:#1d3a32;--wn:#e8b84d;--wnb:#35290f}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.4rem;margin:0 0 4px}h2{font-size:1rem;margin:0 0 12px}
+.sub{color:var(--mut);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.full{grid-column:1/-1}
+label{display:block;font-size:.8rem;color:var(--mut);margin-bottom:3px}
+input,select,button,textarea{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;width:100%}
+textarea{resize:vertical;min-height:70px}
+button{cursor:pointer;background:var(--ac2);color:var(--ac);border-color:var(--ac);font-weight:600}
+.hint{font-size:.75rem;color:var(--mut);margin-top:2px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bd);text-align:right;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}th{font-size:.78rem;color:var(--mut)}
+td.na{color:var(--mut)}tr.tot td{font-weight:700;background:var(--ac2);border-bottom:0}
+.note{background:var(--wnb);color:var(--wn);border-radius:8px;padding:10px 12px;font-size:.82rem;margin-bottom:16px}
+.det{font-size:.82rem;color:var(--mut);margin-top:10px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:.88rem;margin:4px 0;color:var(--tx)}
+.chk input{width:auto;margin-top:4px}
+#doc{min-height:520px;font:13px/1.55 "Times New Roman",Georgia,serif;background:#fff;color:#111;border-color:var(--bd)}
+.row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.row button{width:auto;padding:8px 16px}
+details{font-size:.85rem;color:var(--mut)}summary{cursor:pointer;color:var(--tx);font-weight:600}
+</style>
+</head>
+<body>
+<main>
+<h1>Calculadora de prestaciones y demanda laboral</h1>
+<p class="sub">Calcula las prestaciones conforme a la Ley Federal del Trabajo vigente al 28 de octubre de 2026 (última reforma publicada en el DOF: 14 de mayo de 2026; jornada y horas extra: DOF 1 de mayo de 2026) y genera un borrador de demanda ante el Tribunal Laboral con sus fundamentos.</p>
+<div class="note">Herramienta de apoyo, no sustituye a un abogado. El borrador debe revisarse antes de presentarse. Para asesoría gratuita puedes acudir a la Procuraduría de la Defensa del Trabajo (Profedet o la local de tu estado). Antes de demandar debes tramitar la conciliación prejudicial y anexar la constancia de no conciliación (arts. 684-A a 684-E y 872 LFT), salvo los casos de excepción del art. 685 Ter.</div>
+
+<section class="card"><h2>1. Partes y tribunal</h2><div class="grid">
+<div class="full"><label>Tribunal laboral competente</label><input id="trib" placeholder="Ej.: Tribunal Laboral del Poder Judicial del Estado de ____"></div>
+<div><label>Nombre de la persona trabajadora (actora)</label><input id="act"></div>
+<div class="full"><label>Domicilio para oír y recibir notificaciones</label><input id="dom"></div>
+<div><label>Personas autorizadas / apoderado (opcional)</label><input id="aut"></div>
+<div><label>Persona o empresa demandada</label><input id="dem"></div>
+<div class="full"><label>Domicilio de la demandada (y del centro de trabajo)</label><input id="domd"></div>
+<div><label>Folio de la constancia de no conciliación</label><input id="fol"></div>
+<div><label>Fecha de la constancia</label><input type="date" id="fcon"></div>
+<div><label>Centro de conciliación que la expidió</label><input id="cen" placeholder="Ej.: Centro de Conciliación Laboral del Estado de ____"></div>
+</div></section>
+
+<section class="card"><h2>2. Relación laboral y despido</h2><div class="grid">
+<div><label>Fecha de ingreso</label><input type="date" id="fi" value="2018-03-01"></div>
+<div><label>Fecha del despido o separación</label><input type="date" id="ff" value="2026-10-27"></div>
+<div><label>Puesto</label><input id="pue"></div>
+<div><label>Horario y días de trabajo</label><input id="hor" placeholder="Ej.: lunes a sábado de 9:00 a 18:00"></div>
+<div><label>Forma de pago y salario mensual aproximado</label><input id="pag" placeholder="Ej.: semanal, $12,000 mensuales"></div>
+<div><label>Persona que ordenó el despido</label><input id="qui"></div>
+<div class="full"><label>Cómo ocurrió el despido (lugar, hora, palabras, testigos)</label><textarea id="nar"></textarea></div>
+<div class="full"><label>Funciones principales (opcional)</label><textarea id="fun"></textarea></div>
+<div class="full chk"><input type="checkbox" id="sinav" checked><label style="margin:0;color:inherit">No me entregaron aviso escrito de rescisión (art. 47, último párrafo)</label></div>
+<div><label>Acción que se ejerce</label><select id="acc"><option value="indem">Despido injustificado: indemnización</option><option value="reinst">Despido injustificado: reinstalación</option><option value="resc">Rescisión por causas imputables al patrón (art. 51)</option></select></div>
+<div class="full" id="resbox" style="display:none"><label>Causa de rescisión imputable al patrón (art. 51)</label><textarea id="resc" placeholder="Ej.: falta de pago de salario, malos tratos, reducción de salario..."></textarea></div>
+</div></section>
+
+<section class="card"><h2>3. Datos para el cálculo</h2><div class="grid">
+<div><label>Salario diario (cuota diaria)</label><input type="number" id="sd" value="400" min="0" step="0.01"></div>
+<div><label>Salario diario integrado (art. 84)</label><input type="number" id="sdi" placeholder="Vacío = igual al diario" min="0" step="0.01"><button type="button" id="est" style="margin-top:4px">Estimar integrado</button></div>
+<div><label>Salario mínimo aplicable</label><select id="zona"><option value="315.04">2026 · Resto del país · $315.04</option><option value="440.87">2026 · Frontera norte · $440.87</option><option value="otro">Otro (capturar)</option></select><input type="number" id="zcus" placeholder="Mínimo diario vigente" min="0" step="0.01" style="display:none;margin-top:4px"><div class="hint">Montos de CONASAMI vigentes del 1 de enero al 31 de diciembre de 2026. Si la separación es en 2027 o después, elige «Otro» y captura el mínimo de ese año.</div></div>
+<div><label>Días de aguinaldo al año (mín. 15)</label><input type="number" id="ag" value="15" min="15"></div>
+<div><label>Prima vacacional (mín. 25 %)</label><input type="number" id="pv" value="25" min="25"></div>
+<div><label>Días de salario pendientes</label><input type="number" id="dp" value="0" min="0"></div>
+<div><label>Vacaciones disfrutadas del año en curso (días)</label><input type="number" id="vd" value="0" min="0"></div>
+<div><label>Vacaciones de años anteriores sin disfrutar (días)</label><input type="number" id="va" value="0" min="0"></div>
+<div><label>Horas extra semanales promedio</label><input type="number" id="he" value="0" min="0" step="0.5"></div>
+<div><label>Horas de la jornada diaria</label><input type="number" id="jd" value="8" min="1" step="0.5"><div class="hint">Art. 61: 8 diurna, 7 nocturna, 7.5 mixta</div></div>
+<div><label>Meses transcurridos del juicio</label><input type="number" id="mj" value="0" min="0"><div class="hint">Para salarios vencidos e intereses (art. 48)</div></div>
+</div></section>
+
+<section class="card"><h2>4. Resultados por tipo de terminación</h2>
+<div class="tw"><table id="t"></table></div><div class="det" id="det"></div></section>
+
+<section class="card"><h2>5. Pruebas que se ofrecerán</h2>
+<div id="pr"></div></section>
+
+<section class="card"><h2>6. Borrador de demanda</h2>
+<div class="note" id="alerta"></div>
+<textarea id="doc" spellcheck="false"></textarea>
+<div class="row"><button type="button" id="cp">Copiar texto</button><button type="button" id="gen">Regenerar borrador</button></div>
+<div class="hint" id="msg">Puedes editar el texto directamente. Pégalo en Word para darle formato. El borrador se actualiza solo mientras no lo edites; al regenerar se pierden tus ediciones.</div></section>
+
+<section class="card"><details><summary>Fundamento y criterios aplicados</summary><ul>
+<li><b>Constitución, art. 123 apartado A</b>, fracciones XX (conciliación y tribunales laborales) y XXII (indemnización o reinstalación por despido injustificado).</li>
+<li><b>Aguinaldo</b> (art. 87), <b>vacaciones</b> (arts. 76 y 79, reforma 2023), <b>prima vacacional</b> (art. 80), <b>prima de antigüedad</b> (art. 162, tope del doble del mínimo; en renuncia solo con 15 años).</li>
+<li><b>Indemnización</b> (arts. 48, 50 y 52): 3 meses de salario integrado y 20 días por año; salarios vencidos hasta 12 meses e intereses del 2 % mensual sobre 15 meses de salario después del mes 12.</li>
+<li><b>Horas extra</b> (arts. 66 y 68, reforma DOF 01/05/2026, transitorio cuarto): tope semanal a pago doble de 9, 9, 10, 11 y 12 horas de 2026 a 2030, hasta 4 horas diarias en un máximo de 4 días; el excedente, hasta 4 horas por semana, se paga al triple, y la suma de jornada ordinaria y extra no puede pasar de 12 horas diarias.</li>
+<li><b>Jornada</b> (arts. 59 y 61, transitorio segundo): 48 horas semanales en 2026, 46 en 2027, 44 en 2028, 42 en 2029 y 40 en 2030; diaria de 8 horas diurna, 7 nocturna y 7.5 mixta. El registro electrónico de la jornada (art. 132, fr. XXXIV) es exigible desde el 1 de enero de 2027.</li>
+<li><b>Salario mínimo 2026</b> (CONASAMI): $315.04 general y $440.87 en la Zona Libre de la Frontera Norte, vigentes desde el 1 de enero de 2026. Se usa para el tope de la prima de antigüedad (art. 162).</li>
+<li><b>Prescripción</b> (arts. 516 a 522): 2 meses en despido (art. 518); la solicitud de conciliación suspende el plazo desde su presentación y este se reanuda al día siguiente de la constancia (arts. 518 y 521, fr. III).</li>
+<li><b>Procedimiento</b>: arts. 684-A a 684-E (conciliación), 870 a 872 (demanda y anexos), 784 y 804 (carga de la prueba y documentos del patrón) y 516 a 522 (prescripción).</li>
+<li>No incluye PTU, seguridad social ni ISR. Los intereses son una estimación.</li></ul></details></section>
+
+<section class="card"><details><summary>Tratados internacionales, jurisprudencia y criterios de consulta</summary>
+<p class="det">Antes de citar cualquier criterio, confirma su vigencia y su texto completo en el Semanario Judicial de la Federación (sjf2.scjn.gob.mx) y, para la Corte IDH, en corteidh.or.cr. Un criterio anterior a la reforma procesal de 2019 puede haberse adaptado o superado.</p>
+<p><b>Constitución y Ley Federal del Trabajo</b></p><ul>
+<li><b>Constitución, art. 1o.</b>: los derechos humanos de la Constitución y de los tratados se interpretan de forma conforme y favoreciendo la protección más amplia (principio pro persona). <b>Art. 17</b>: acceso a tribunales expeditos. <b>Art. 133</b>: los tratados forman parte de la Ley Suprema. <b>Art. 123, apartado A, fr. XXII</b>: reinstalación o indemnización por despido injustificado.</li>
+<li><b>LFT, arts. 2 y 3</b> (trabajo digno o decente), <b>5 y 33</b> (irrenunciabilidad de derechos y nulidad de renuncias), <b>6</b> (los tratados aplican en lo que beneficien a la persona trabajadora), <b>17</b> (principios generales, jurisprudencia y equidad como fuentes supletorias) y <b>18</b> (en caso de duda, la interpretación más favorable).</li></ul>
+<p><b>Tratados y convenios en los que México es parte</b></p><ul>
+<li><b>Convención Americana sobre Derechos Humanos</b>: arts. 1.1 y 2 (respeto y adecuación), 8.1 (garantías judiciales), 24 (igualdad), 25 (protección judicial) y 26 (desarrollo progresivo de los derechos económicos, sociales y culturales).</li>
+<li><b>Pacto Internacional de Derechos Económicos, Sociales y Culturales</b>: art. 6 (derecho a trabajar), art. 7 (salario equitativo, descanso, limitación razonable de las horas de trabajo y vacaciones periódicas pagadas) y art. 9 (seguridad social).</li>
+<li><b>Protocolo de San Salvador</b>: arts. 6 y 7 (en especial el inciso d, sobre estabilidad laboral y la indemnización o readmisión por despido injustificado) y art. 9.</li>
+<li><b>Convención sobre la Eliminación de Todas las Formas de Discriminación contra la Mujer</b>, art. 11 (no discriminación en el empleo, incluida la protección frente al despido por embarazo o maternidad).</li>
+<li><b>Convenios de la OIT</b>: núm. 111 (discriminación en el empleo y la ocupación, ratificado el 11 de septiembre de 1961), núm. 100 (igualdad de remuneración), núm. 98 (sindicación y negociación colectiva, ratificado en 2018) y núm. 190 (violencia y acoso en el mundo del trabajo, ratificación depositada el 6 de julio de 2022).</li>
+<li><b>Declaración Universal de los Derechos Humanos</b>, arts. 23 y 24: no es un tratado, pero es un criterio de interpretación.</li></ul>
+<p><b>Corte Interamericana de Derechos Humanos</b></p><ul>
+<li><b>Caso Lagos del Campo Vs. Perú</b>, sentencia de 31 de agosto de 2017, Serie C No. 340: primera condena por violación directa del art. 26 de la Convención Americana; reconoce la estabilidad laboral como derecho protegido.</li></ul>
+<p><b>Suprema Corte de Justicia de la Nación</b></p><ul>
+<li><b>P./J. 20/2014 (10a.)</b>, reg. 2006224: los derechos humanos de la Constitución y de los tratados integran el parámetro de control de regularidad constitucional; si la Constitución tiene una restricción expresa, se estará a su texto.</li>
+<li><b>2a./J. 58/2003</b>, reg. 183909: en los conflictos por despido, el patrón debe probar los elementos básicos de la relación, el abandono o las causas de rescisión (arts. 784 y 804).</li>
+<li><b>2a./J. 95/2007</b>, reg. 172293: el aviso escrito de fecha y causa de la rescisión también se debe a las personas trabajadoras de confianza. Desde la reforma de 2012, la falta de aviso presume la separación injustificada (art. 47).</li>
+<li><b>Amparo directo en revisión 4228/2024</b> (Segunda Sala): el último párrafo del art. 47 es constitucional; la falta de aviso solo genera una presunción de despido injustificado y el patrón puede probar lo contrario. Es una sentencia, no una jurisprudencia.</li>
+<li><b>2a./J. 66/2020 (10a.)</b>, reg. 2022837: la prima de antigüedad procede aunque no se demande expresamente, si se determinan los años de servicio y se acredita el despido.</li>
+<li><b>4a./J. 20/93</b>, reg. 207780: la carga de probar el tiempo efectivamente laborado corresponde al patrón (art. 784, fr. VIII), con límite en las reclamaciones inverosímiles de horas extra. Es un criterio de la Cuarta Sala anterior a las reformas de 2012 y 2019: verifica su vigencia antes de invocarlo.</li></ul>
+</details></section>
+</main>
+<script>
+const $=id=>document.getElementById(id),n=id=>parseFloat($(id).value)||0,v=id=>$(id).value.trim();
+const fmt=x=>x.toLocaleString("es-MX",{style:"currency",currency:"MXN"});
+const D=s=>{const[a,b,c]=s.split("-").map(Number);return Date.UTC(a,b-1,c)},DAY=864e5;
+const fl=s=>s?new Date(s+"T12:00:00").toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"}):"[FECHA]";
+const X=(id,p)=>v(id)||"["+p+"]";
+const vacDias=y=>y<=5?12+(y-1)*2:20+2*Math.ceil((y-5)/5);
+const PR=[["Confesional a cargo del representante legal de la demandada (posiciones)",1],["Documental: constancia de no conciliación, recibos de pago, contrato, credencial, mensajes y demás documentos propios",1],["Documentales a cargo del patrón: contrato, nómina, controles de asistencia, pagos de aguinaldo y vacaciones, avisos al IMSS (arts. 784 y 804 LFT)",1],["Testimonial a cargo de personas que presenciaron los hechos",0],["Informe del IMSS sobre alta, salario base de cotización y semanas cotizadas",1],["Inspección o requerimiento de documentos en poder de la demandada",0],["Registro electrónico de la jornada y controles de asistencia (art. 132, fr. XXXIV; el registro es exigible desde el 1 de enero de 2027)",0],["Instrumental de actuaciones",1],["Presuncional legal y humana",1]];
+$("pr").innerHTML=PR.map((p,i)=>'<label class="chk"><input type="checkbox" class="pc" '+(p[1]?"checked":"")+' data-i="'+i+'"><span>'+p[0]+'</span></label>').join("")+'<label class="chk"><input type="checkbox" id="imss" checked><span>Reclamar inscripción y pago de aportaciones al IMSS, SAR e Infonavit por el salario real</span></label><label class="chk"><input type="checkbox" id="tj" checked><span>Incluir en el borrador los tratados internacionales y la jurisprudencia aplicables</span></label>';
+function C(){
+const fi=D($("fi").value),ff=D($("ff").value);if(!fi||!ff||ff<fi)return null;
+const dias=(ff-fi)/DAY,anios=dias/365;let N=0;
+while(true){const a=new Date(fi);a.setUTCFullYear(a.getUTCFullYear()+N+1);if(a.getTime()<=ff)N++;else break}
+const u=new Date(fi);u.setUTCFullYear(u.getUTCFullYear()+N);
+const desde=(ff-u.getTime())/DAY,ent=vacDias(N+1),yr=new Date(ff).getUTCFullYear();
+const sd=n("sd"),sdi=n("sdi")||sd,tope=2*($("zona").value=="otro"?n("zcus"):n("zona")),pv=n("pv")/100;
+const ini=Math.max(fi,Date.UTC(yr,0,1)),dAg=Math.min(365,(ff-ini)/DAY+1),r={};
+r.sal=n("dp")*sd;r.ag=sd*n("ag")*dAg/365;
+const vacD=Math.max(0,ent*Math.min(desde,365)/365-n("vd"))+n("va");
+r.vac=vacD*sd;r.pvac=r.vac*pv;
+const cap=yr<=2027?9:yr==2028?10:yr==2029?11:12,h=n("he");
+r.he=Math.min(365,dias)/7*(Math.min(h,cap)*2+Math.max(0,h-cap)*3)*sd/(n("jd")||8);
+r.pa=12*anios*Math.min(sd,tope);r.ind=90*sdi;r.v20=20*anios*sdi;
+const m=n("mj");r.sv=Math.min(m,12)*30*sdi+(m>12?15*30*sdi*(Math.pow(1.02,m-12)-1):0);
+return{r,N,ent,vacD,dAg,cap,tope,dias,anios,sd,sdi,ff,fi,m}}
+$("est").onclick=()=>{const c=C();if(!c)return;$("sdi").value=(n("sd")*(365+n("ag")+c.ent*n("pv")/100)/365).toFixed(2);run()};
+const COLS=[["Renuncia voluntaria",{sal:1,ag:1,vac:1,pvac:1,he:1,pa:2}],["Despido justificado",{sal:1,ag:1,vac:1,pvac:1,he:1,pa:1}],["Despido injustificado",{sal:1,ag:1,vac:1,pvac:1,he:1,pa:1,ind:1,v20:1,sv:1}],["Rescisión imputable al patrón",{sal:1,ag:1,vac:1,pvac:1,he:1,pa:1,ind:1,v20:1}]];
+const ROWS=[["sal","Salarios pendientes"],["ag","Aguinaldo proporcional"],["vac","Vacaciones pendientes"],["pvac","Prima vacacional"],["he","Horas extra adeudadas"],["pa","Prima de antigüedad"],["ind","Indemnización de 3 meses"],["v20","20 días por año de servicio"],["sv","Salarios vencidos e intereses"]];
+function calc(c){
+const t=$("t");let h='<tr><th>Concepto</th>'+COLS.map(x=>"<th>"+x[0]+"</th>").join("")+"</tr>";
+const ok=(x,k)=>x[1][k]==1||(x[1][k]==2&&c.anios>=15);
+ROWS.forEach(([k,l])=>{h+="<tr><td>"+l+"</td>"+COLS.map(x=>ok(x,k)?"<td>"+fmt(c.r[k])+"</td>":'<td class="na">—</td>').join("")+"</tr>"});
+h+='<tr class="tot"><td>TOTAL</td>'+COLS.map(x=>"<td>"+fmt(ROWS.reduce((s,[k])=>s+(ok(x,k)?c.r[k]:0),0))+"</td>").join("")+"</tr>";
+t.innerHTML=h;
+$("det").textContent="Antigüedad: "+c.anios.toFixed(2)+" años. Vacaciones del año de servicio "+(c.N+1)+": "+c.ent+" días, pendientes "+c.vacD.toFixed(2)+". Aguinaldo: "+Math.round(c.dAg)+" días del año. Tope de prima de antigüedad: "+fmt(c.tope)+" diarios. Tope semanal de horas a pago doble: "+c.cap+" (las que excedan, hasta 4 por semana, se pagan al triple; art. 68)."}
+function alerta(c){
+const a=v("acc"),d=new Date(c.ff);d.setUTCMonth(d.getUTCMonth()+2);
+const hoy=new Date(),lim=Math.ceil((d.getTime()-Date.UTC(hoy.getFullYear(),hoy.getMonth(),hoy.getDate()))/DAY);
+let s=a=="resc"?"Para separarte por causa imputable al patrón debes hacerlo dentro de los 30 días siguientes a que ocurra la causa (art. 52); la acción para reclamar la indemnización prescribe, por regla general, en un año (art. 516), pero no esperes al final. ":"Plazo de prescripción por despido: 2 meses contados desde el día siguiente al despido (art. 518), es decir, hasta el "+fl(d.toISOString().slice(0,10))+(lim>=0?" ("+lim+" días a partir de hoy). ":". Ese plazo ya habría transcurrido, salvo que hayas presentado a tiempo la solicitud de conciliación; consulta de inmediato a un abogado o a la Profedet. ");
+$("alerta").textContent=s+"La solicitud de conciliación prejudicial suspende el plazo desde su presentación y este se reanuda al día siguiente de que se expida la constancia de no conciliación (arts. 518 y 521, fr. III). Si el patrón no te entregó personalmente aviso escrito de rescisión, el art. 47 prevé que la prescripción no corre hasta que lo recibas, pero no te apoyes en ello: presenta la solicitud cuanto antes y revisa tu caso con un abogado."}
+function gen(){
+const c=C();if(!c){$("doc").value="Revisa las fechas.";return}
+const a=v("acc"),r=c.r,L=[];let tot=0;
+const add=(t,k,f)=>{const m=k?r[k]:0;tot+=m;L.push(t+(k?", por la cantidad de "+fmt(m):"")+(f?" ("+f+")":"")+".")};
+if(a=="reinst")add("La reinstalación inmediata en el puesto de "+X("pue","PUESTO")+", en los mismos términos y condiciones en que me desempeñaba","","arts. 48 y 123-A fr. XXII");
+else{add("El pago de la indemnización constitucional de tres meses de salario integrado","ind","arts. 48 y 50 fr. III");add("El pago de 20 días de salario por cada año de servicios prestados","v20","art. 50 fr. II");add("El pago de la prima de antigüedad de 12 días por año de servicios, con el salario topado al doble del mínimo","pa","art. 162")}
+if(a!="resc")add("El pago de los salarios vencidos desde la fecha del despido hasta el cumplimiento del laudo, cuantificados a la fecha de esta demanda"+(c.m>12?" e incluyendo los intereses del 2 % mensual sobre quince meses de salario":"")+", y los que se sigan generando","sv","art. 48");
+if(r.sal>0)add("El pago de "+n("dp")+" días de salario devengados y no pagados","sal","art. 88");
+add("El pago del aguinaldo proporcional del año "+new Date(c.ff).getUTCFullYear()+" ("+Math.round(c.dAg)+" días laborados)","ag","art. 87");
+add("El pago de "+c.vacD.toFixed(2)+" días de vacaciones pendientes","vac","arts. 76 y 79");
+add("El pago de la prima vacacional de "+n("pv")+" % sobre dichas vacaciones","pvac","art. 80");
+if(r.he>0)add("El pago de tiempo extraordinario laborado en el último año, a razón de "+n("he")+" horas semanales promedio, con pago doble y triple según corresponda","he","arts. 66 y 68");
+if($("imss").checked)L.push("La inscripción y el pago de las aportaciones omitidas ante el IMSS, el SAR y el Infonavit con el salario real percibido (arts. 15 y 304-A de la Ley del Seguro Social y art. 29 de la Ley del Infonavit).");
+const P=L.map((x,i)=>String.fromCharCode(65+i)+") "+x).join("\n");
+const H=[];
+H.push("Ingresé a laborar para la demandada el "+fl($("fi").value)+", con el puesto de "+X("pue","PUESTO")+(v("fun")?", realizando las siguientes funciones: "+v("fun"):"")+", bajo una relación por tiempo indeterminado.");
+H.push("Mi jornada era "+X("hor","HORARIO Y DÍAS")+". Mi salario diario era de "+fmt(c.sd)+(c.sdi!=c.sd?" y mi salario diario integrado de "+fmt(c.sdi):"")+", pagado de forma "+X("pag","FORMA DE PAGO")+". Mi antigüedad al "+fl($("ff").value)+" era de "+c.anios.toFixed(2)+" años.");
+H.push("Previo a esta demanda agoté la etapa de conciliación prejudicial ante "+X("cen","CENTRO DE CONCILIACIÓN")+", que expidió la constancia de no conciliación con folio "+X("fol","FOLIO")+" de fecha "+fl($("fcon").value)+", la cual se anexa (arts. 684-A a 684-E y 872).");
+if(a=="resc")H.push("El "+fl($("ff").value)+" me separé de mi empleo por causas imputables a la demandada, conforme al art. 51 de la Ley: "+X("resc","CAUSA(S) Y HECHOS CONCRETOS")+".");
+else H.push("El "+fl($("ff").value)+", en "+X("domd","LUGAR")+", "+X("qui","PERSONA QUE ORDENÓ EL DESPIDO")+" me despidió de manera injustificada. "+X("nar","NARRACIÓN DE LOS HECHOS: hora, palabras, testigos")+($("sinav").checked?" No se me entregó aviso escrito de rescisión con la fecha y la causa del despido, por lo que se presume el despido injustificado (art. 47, últimos párrafos).":""));
+if(r.he>0)H.push("Durante el último año laboré en promedio "+n("he")+" horas extra semanales que no se me pagaron.");
+H.push("A la fecha de la separación la demandada no me ha pagado las prestaciones reclamadas, cuyo monto estimado asciende a "+fmt(tot)+", sin perjuicio de su actualización.");
+const Hh=H.map((x,i)=>(i+1)+". "+x).join("\n\n");
+const ps=[...document.querySelectorAll(".pc")].filter(e=>e.checked).map((e,i)=>(i+1)+". "+PR[e.dataset.i][0]+".").join("\n");
+const dv=["Constitución Política de los Estados Unidos Mexicanos, art. 123 apartado A, fracciones "+(r.he>0?"XI, ":"")+"XX y XXII.","Ley Federal del Trabajo: arts. 47 a 52 (rescisión, despido e indemnización), 76, 79 y 80 (vacaciones y prima vacacional), 84 y 89 (salario integrado), 87 (aguinaldo), 162 (prima de antigüedad)"+(r.he>0?", 58 a 61, 66 y 68 (jornada y tiempo extraordinario, reforma DOF 1 de mayo de 2026)":"")+", 516 a 522 (prescripción), 684-A a 684-E (conciliación), 784 y 804 (carga de la prueba), 870 a 872 (procedimiento ordinario y demanda)."].map(x=>"- "+x).join("\n");
+let tjx="";if($("tj").checked){
+const T=["Constitución Política de los Estados Unidos Mexicanos, arts. 1o. (reconocimiento de los derechos humanos de fuente constitucional y convencional, interpretación conforme y principio pro persona), 17 y 133.","Ley Federal del Trabajo, arts. 2, 3, 5, 6, 17, 18 y 33 (trabajo digno o decente, irrenunciabilidad de derechos, aplicación de los tratados en lo que beneficien a la persona trabajadora e interpretación más favorable en caso de duda).","Convención Americana sobre Derechos Humanos, arts. 1.1, 2, 8.1, 24, 25 y 26.","Pacto Internacional de Derechos Económicos, Sociales y Culturales, arts. 6 y 7 (derecho al trabajo y a condiciones equitativas y satisfactorias, incluidos salario equitativo, limitación razonable de la jornada, descanso y vacaciones pagadas).","Protocolo Adicional a la Convención Americana en materia de Derechos Económicos, Sociales y Culturales (Protocolo de San Salvador), arts. 6 y 7, inciso d) (estabilidad laboral e indemnización o readmisión en caso de despido injustificado).","Corte IDH, Caso Lagos del Campo Vs. Perú, sentencia de 31 de agosto de 2017, Serie C No. 340 (protección de la estabilidad laboral)."];
+const J=["Jurisprudencia P./J. 20/2014 (10a.), registro digital 2006224, «DERECHOS HUMANOS CONTENIDOS EN LA CONSTITUCIÓN Y EN LOS TRATADOS INTERNACIONALES. CONSTITUYEN EL PARÁMETRO DE CONTROL DE REGULARIDAD CONSTITUCIONAL...»."];
+if(a!="resc")J.push("Jurisprudencia 2a./J. 58/2003, registro digital 183909, sobre la carga probatoria del patrón en los conflictos por despido (arts. 784 y 804 de la Ley).");
+if(a!="resc"&&$("sinav").checked)J.push("Jurisprudencia 2a./J. 95/2007, registro digital 172293, sobre la obligación del patrón de dar aviso escrito de la fecha y causa de la rescisión (art. 47), incluso a personas trabajadoras de confianza.");
+if(r.pa>0)J.push("Jurisprudencia 2a./J. 66/2020 (10a.), registro digital 2022837, sobre la procedencia de la prima de antigüedad cuando se acredita el despido y los años de servicio, aunque no se demande expresamente.");
+tjx="\n\nTRATADOS INTERNACIONALES Y PRINCIPIOS\n\n"+T.map(x=>"- "+x).join("\n")+"\n\nJURISPRUDENCIA\n\n"+J.map(x=>"- "+x).join("\n")}
+$("doc").value="C. JUEZ DEL "+X("trib","TRIBUNAL LABORAL COMPETENTE").toUpperCase()+"\nP R E S E N T E\n\n"+X("act","NOMBRE DEL ACTOR")+", por mi propio derecho, señalando como domicilio para oír y recibir notificaciones el ubicado en "+X("dom","DOMICILIO")+(v("aut")?", y autorizando para tal efecto a "+v("aut"):"")+", ante Usted comparezco para exponer:\n\nQue por medio del presente escrito, en la vía ordinaria laboral y con fundamento en los artículos 870, 871 y 872 de la Ley Federal del Trabajo, vengo a demandar de "+X("dem","PERSONA O EMPRESA DEMANDADA")+", con domicilio en "+X("domd","DOMICILIO DE LA DEMANDADA")+", y de quien resulte responsable de la fuente de trabajo, las siguientes\n\nPRESTACIONES\n\n"+P+"\n\nMonto total estimado de las prestaciones cuantificadas: "+fmt(tot)+".\n\nHECHOS\n\n"+Hh+"\n\nDERECHO\n\n"+dv+tjx+"\n\nPRUEBAS\n\nOfrezco las siguientes, relacionándolas con los hechos de la demanda:\n\n"+ps+"\n\nPor lo anteriormente expuesto, a Usted C. Juez, atentamente pido:\n\nPRIMERO. Tenerme por presentado con este escrito y la constancia de no conciliación anexa, demandando las prestaciones indicadas.\nSEGUNDO. Ordenar el emplazamiento de la demandada en el domicilio señalado.\nTERCERO. Tener por ofrecidas las pruebas relacionadas.\nCUARTO. En su oportunidad, dictar sentencia condenando a la demandada al pago de las prestaciones reclamadas.\n\nProtesto lo necesario.\n\n"+X("dom","LUGAR")+", a ____ de ____________ de 20__.\n\n\n______________________________\n"+X("act","NOMBRE Y FIRMA DEL ACTOR")+"\n\nAnexos: constancia de no conciliación, copias de traslado para cada demandado, identificación oficial y documentos ofrecidos.";
+alerta(c);dirty=false}
+let dirty=false;
+function run(){const c=C(),t=$("t");if(!c){t.innerHTML="<tr><td>Revisa las fechas: la separación debe ser posterior al ingreso.</td></tr>";return}calc(c);alerta(c)}
+document.querySelectorAll("input,select,textarea").forEach(e=>e.addEventListener("input",()=>{if(e.id=="doc"){dirty=true;return}run();if(!dirty)gen()}));
+$("acc").onchange=()=>{$("resbox").style.display=v("acc")=="resc"?"block":"none";run();gen()};
+$("zona").addEventListener("change",()=>{$("zcus").style.display=$("zona").value=="otro"?"block":"none";run();if(!dirty)gen()});$("gen").onclick=gen;
+$("cp").onclick=async()=>{const d=$("doc");try{await navigator.clipboard.writeText(d.value);$("msg").textContent="Texto copiado."}catch(e){d.select();try{document.execCommand("copy");$("msg").textContent="Texto copiado."}catch(_){$("msg").textContent="Selecciona el texto y cópialo manualmente."}}};
+run();gen();
+</script>
+</body>
+</html>
